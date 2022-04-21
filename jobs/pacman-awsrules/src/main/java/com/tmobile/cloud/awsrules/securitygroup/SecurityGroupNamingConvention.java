@@ -43,6 +43,11 @@ import java.util.stream.Collectors;
 public class SecurityGroupNamingConvention extends BaseRule {
 
     private static final Logger logger= LoggerFactory.getLogger(SecurityGroupNamingConvention.class);
+    //TODO: externalize to config file later
+    private static final String SECURITY_GROUP_PREFIX="security-group";
+    private static final String[] REGION_CODE={"us-east1", "us-west1","us-east2", "us-west2","eu-west-1", "eu-central-1", "ap-northeast-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2", "sa-east-1"};
+    private static final String[] ENVIRONMENT_CODE={"d","t","s","p"};
+    private static final String APPLICATION_CODE="([a-z0-9\\-]+)";
 
 
     @Override
@@ -91,10 +96,10 @@ public class SecurityGroupNamingConvention extends BaseRule {
     private boolean validateSecurityGroupName(String resourceId) {
 
         logger.debug("Validating the SecurityGroupNamingConvention for resource : {}", resourceId );
-        String namePrefix=PacmanSdkConstants.SECURITY_GROUP_PREFIX;
-        String[] regions= PacmanSdkConstants.REGION_CODE;
-        String[] env=PacmanSdkConstants.ENVIRONMENT_CODE;
-        String appNamePattern=PacmanSdkConstants.APPLICATION_CODE;
+        String namePrefix=SECURITY_GROUP_PREFIX;
+        String[] regions= REGION_CODE;
+        String[] env=ENVIRONMENT_CODE;
+        String appNamePattern=APPLICATION_CODE;
         logger.debug("Validating the prefix criteria. Expected prefix: {}",namePrefix);
         boolean prefixCheck= resourceId.startsWith(namePrefix);
         if(!prefixCheck){
