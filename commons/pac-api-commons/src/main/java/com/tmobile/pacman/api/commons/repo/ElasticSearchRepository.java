@@ -1099,6 +1099,7 @@ public class ElasticSearchRepository implements Constants {
 
 		try {
 			String requestJson = gson.toJson(requestBody, Object.class);
+			LOGGER.debug("URL: " + urlToQuery + " Body: " + requestJson);
 			responseDetails = PacHttpUtils.doHttpPost(urlToQuery, requestJson);
 			Map<String, Object> response = (Map<String, Object>) gson.fromJson(responseDetails, Map.class);
 			Map<String, Object> aggregations = (Map<String, Object>) response.get(AGGREGATIONS);

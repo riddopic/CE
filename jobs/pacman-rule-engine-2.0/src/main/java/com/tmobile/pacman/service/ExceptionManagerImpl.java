@@ -114,6 +114,7 @@ public class ExceptionManagerImpl implements ExceptionManager {
         Map<String, Object> dateRangeMap = new HashMap<String, Object>();
         dateRangeMap.put("expiryDate", rangeMap);
         mustFilter.put("range", dateRangeMap);
+        logger.debug("ES URL to fetch data: {}", ESUtils.getEsUrl());
         List<Map<String, String>> exceptions = ESUtils.getDataFromES(ESUtils.getEsUrl(), INDEX_FOR_EXCEPTIONS,
                 TYPE_FOR_STICKY_EXCEPTIONS, mustFilter, null, null, null, 0, 20);
         List<IssueException> stickyExceptions = exceptions.stream()

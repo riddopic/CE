@@ -56,6 +56,8 @@ public class SecurityGroupNamingConvention extends BaseRule {
         //String elasticSearchUrl=ruleParam.get(PacmanRuleConstants.ES_URL_PARAM);
         //String pacmanHost= PacmanUtils.getPacmanHost(PacmanRuleConstants.ES_URI);
 
+        logger.debug("Rule parameters:  {}",ruleParam );
+        logger.debug("Resource attributes: {}", resourceAttributes);
         String resourceId = null;
 
         String severity = ruleParam.get(PacmanRuleConstants.SEVERITY);

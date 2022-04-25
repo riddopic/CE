@@ -821,6 +821,7 @@ public class CommonUtils {
                 throw new IOException("non 200 code from rest call--->" + url);
             }
              String responseStr = EntityUtils.toString(httpresponse.getEntity());
+            LOGGER.debug("Response: {}", responseStr);
              return responseStr;
         }catch(Exception e){
         	LOGGER.error("Exception in isResourceDateExpired: " + e.getMessage());

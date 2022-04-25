@@ -264,14 +264,14 @@ public class RuleExecutor {
             if(ruleParam.containsKey(PacmanSdkConstants.RULE_CONTACT))
             {
                 String message = String.format("%s total resource -> %s , total results returned by rule-> %s",ruleParam.get(PacmanSdkConstants.RULE_ID), resources.size(),evaluations.size());
-                //send  message about missing evaluations 
+                //send  message about missing evaluations
                 if(notifyRuleOwner(ruleParam.get(PacmanSdkConstants.RULE_CONTACT),message)){
                     logger.trace(String.format("message sent to %s" ,ruleParam.get(PacmanSdkConstants.RULE_CONTACT)));
                 }else{
                     logger.error(String.format("unable to send message to %s" ,ruleParam.get(PacmanSdkConstants.RULE_CONTACT)));
                 }
             }
-            
+
             List<String> allEvaluvatedResources = evaluations.stream()
                     .map(obj -> obj.getAnnotation().get(PacmanSdkConstants.DOC_ID)).collect(Collectors.toList());
             logger.debug("all evaluated resource count" + allEvaluvatedResources.size());
@@ -311,10 +311,16 @@ public class RuleExecutor {
             if (evaluations.size() > 0) {
 
                 ExceptionManager exceptionManager = new ExceptionManagerImpl();
+                String resourceType = ruleParam.get(PacmanSdkConstants.TARGET_TYPE);
+
+                logger.debug("Target type:  {}", resourceType);
                 Map<String, List<IssueException>> exemptedResourcesForRule = exceptionManager.getStickyExceptions(
-                        ruleParam.get(PacmanSdkConstants.RULE_ID), ruleParam.get(PacmanSdkConstants.TARGET_TYPE));
+                        ruleParam.get(PacmanSdkConstants.RULE_ID), resourceType);
+                logger.debug("Exempted Resources: {}", exemptedResourcesForRule);
                 Map<String, IssueException> individuallyExcemptedIssues = exceptionManager
-                        .getIndividualExceptions(ruleParam.get(PacmanSdkConstants.TARGET_TYPE));
+                        .getIndividualExceptions(resourceType);
+
+                logger.debug("Individually Exempted Resources: {}", individuallyExcemptedIssues);
 
                 ruleEngineStats.putAll(processRuleEvaluations(resources, evaluations, ruleParam,
                         exemptedResourcesForRule, individuallyExcemptedIssues));
@@ -341,6 +347,7 @@ public class RuleExecutor {
                 PacmanSdkConstants.DATE_FORMAT));
         ruleEngineStats.put(PacmanSdkConstants.STATUS_KEY, PacmanSdkConstants.STATUS_FINISHED);
         try{
+            logger.debug("Rule Executor publish eval result. Type: {}",type);
                 ESUtils.publishMetrics(ruleEngineStats,type);
         }catch(Exception e) {
             logger.error("unable to publish metrices",e);

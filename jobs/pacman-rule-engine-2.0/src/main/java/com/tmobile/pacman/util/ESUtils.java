@@ -480,6 +480,7 @@ public class ESUtils {
     public static Boolean publishMetrics(Map<String, Object> evalResults,String type) {
         //logger.info(Joiner.on("#").withKeyValueSeparator("=").join(evalResults));
         String indexName = CommonUtils.getPropValue(PacmanSdkConstants.STATS_INDEX_NAME_KEY);// "fre-stats";
+        logger.debug("Publishing with indexName: {}", indexName);
         return doESPublish(evalResults, indexName, type);
     }
 
@@ -514,6 +515,7 @@ public class ESUtils {
         
         Gson serializer = new GsonBuilder().create();
         String postBody = serializer.toJson(evalResults);
+        logger.debug("Publishing with request body:  {}",postBody);
         return postJsonDocumentToIndexAndType(evalResults.get(PacmanSdkConstants.EXECUTION_ID).toString(),indexName, type,postBody,Boolean.FALSE);
     }
     
@@ -546,6 +548,7 @@ public class ESUtils {
             logger.error("unable to find ES url");
             return false;
         }
+
         try {
             if (!ESUtils.isValidIndex(url, indexName)) {
                 ESUtils.createIndex(url, indexName);
@@ -558,7 +561,7 @@ public class ESUtils {
             if(isUpdate){
                 esUrl += "/_update";
             }
-            
+            logger.debug("ES URL: {}, Request body: {}", esUrl, postBody);
             CommonUtils.doHttpPost(esUrl,postBody,new HashMap<>());
         } catch (Exception e) {
             logger.error("unable to publish execution stats");
