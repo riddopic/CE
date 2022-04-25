@@ -218,14 +218,18 @@ public class AnnotationPublisher {
             bulkRequestBody.append("\n");
             if (bulkRequestBody.toString().getBytes().length
                     / (1024 * 1024) >= PacmanSdkConstants.ES_MAX_BULK_POST_SIZE) {
+                logger.debug("Annotation publisher publishing all annotations. Bulk RequestUrl: {}, Request Body :{} ", bulkPostUrl,bulkRequestBody.toString());
                 response = CommonUtils.doHttpPost(bulkPostUrl, bulkRequestBody.toString(),new HashMap<>());
+                logger.debug("Bulk publish response: {}", response);
                 responseList.add(serializer.fromJson(response, Map.class));
                 bulkRequestBody.setLength(0);
             }
         }
         // post the remaining data if available
         if (bulkRequestBody.length() > 0) {
+            logger.debug("Annotation publisher publishing all annotations. Bulk RequestUrl: {}, Request Body :{} ", bulkPostUrl,bulkRequestBody.toString());
             response = CommonUtils.doHttpPost(bulkPostUrl, bulkRequestBody.toString(),new HashMap<>());
+            logger.debug("Bulk publish response: {}", response);
         }
         responseList.add(serializer.fromJson(response, Map.class));
         if (responsesHasError(responseList)) {

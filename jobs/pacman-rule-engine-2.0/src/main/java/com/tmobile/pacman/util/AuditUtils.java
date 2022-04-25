@@ -63,6 +63,7 @@ public class AuditUtils {
                 if (requestBody.toString().getBytes("UTF-8").length >= 5 * 1024 * 1024) { // 5
                                                                                           // MB
                     try {
+                        logger.debug("Post publish audit trail: Request URL: {}, Request Body :{} ", requestUrl,requestBody.toString());
                         CommonUtils.doHttpPost(requestUrl, requestBody.toString());
                     } catch (Exception e) {
                         logger.error("Audit creation failed", e);
@@ -77,6 +78,7 @@ public class AuditUtils {
         if (requestBody.length() > 0) {
             try {
                 CommonUtils.doHttpPost(requestUrl, requestBody.toString());
+                logger.debug("Post publish audit trail: Request URL: {}, Request Body :{} ", requestUrl,requestBody.toString());
             } catch (Exception e) {
                 logger.error("Audit creation failed", e);
             }
