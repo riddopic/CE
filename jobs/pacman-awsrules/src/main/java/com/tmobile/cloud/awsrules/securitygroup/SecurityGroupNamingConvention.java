@@ -77,19 +77,30 @@ public class SecurityGroupNamingConvention extends BaseRule {
             annotation.put("_resourceid",resourceId);
             annotation.put("ruleId",resourceId);
 
+            logger.debug("Before ValidateSecurityGroup Method.");
+
             boolean isValidName = validateSecurityGroupName(resourceId);
+            logger.debug("After ValidateSecurityGroup Method.");
+            logger.debug("Value of isValidName is: " + isValidName);
+
 
             if(!isValidName){
+                logger.debug("Inside isValidName!");
+
                 List<Map<String,Object>> issueList=new ArrayList<>();
                 Map<String,Object> issue=new LinkedHashMap<>();
                 issue.put(PacmanRuleConstants.VIOLATION_REASON,
                         "Security group name does not starts with correct prefix");
                 issueList.add(issue);
                 annotation.put("issueDetails",issueList.toString());
+                logger.debug("Returning the failure!");
+
                 return new RuleResult(PacmanSdkConstants.STATUS_FAILURE,PacmanRuleConstants.FAILURE_MESSAGE,annotation);
             }
 
         }
+        logger.debug("Returning the success!");
+
         return new RuleResult(PacmanSdkConstants.STATUS_SUCCESS,PacmanRuleConstants.SUCCESS_MESSAGE);
     }
 
@@ -126,7 +137,7 @@ public class SecurityGroupNamingConvention extends BaseRule {
     }
 
     private String validateValues(String targetValue, String[] values) {
-         return Arrays.stream(values).filter(item->targetValue.startsWith(item)).findFirst().orElse(null);
+        return Arrays.stream(values).filter(item->targetValue.startsWith(item)).findFirst().orElse(null);
     }
 
     @Override
