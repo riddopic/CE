@@ -226,6 +226,7 @@ public class ComplianceRepositoryImpl implements ComplianceRepository, Constants
         int from = request.getFrom();
 
         String searchText = request.getSearchtext();
+        logger.info("Get issues from ES. Request Parameters: AssetGroups:"+assetGroup+", filters:"+filters+", from:"+from+", size: "+size);
         // _source only these fields from ES
         ArrayList<String> fields = new ArrayList<>();
         fields.add(RESOURCEID);
@@ -267,7 +268,7 @@ public class ComplianceRepositoryImpl implements ComplianceRepository, Constants
                     ruleId = pair.getValue().toString();
                     ruleIdQuery = "SELECT ruleId, displayName FROM cf_RuleInstance WHERE STATUS = 'ENABLED' AND ruleId = '"
                             + ruleId + "'";
-
+                    logger.info("Fetching rule data from query: "+ruleIdQuery);
                     ruleIdDetail = rdsepository.getDataFromPacman(ruleIdQuery);
 
                     if (ruleIdDetail.isEmpty()) {
@@ -275,6 +276,7 @@ public class ComplianceRepositoryImpl implements ComplianceRepository, Constants
                     }
                     ruleIdwithDisplayNameMap = ruleIdDetail.stream().collect(
                             Collectors.toMap(s -> (String) s.get(RULEID), s -> (String) s.get(RULE_DISPAY_NAME)));
+                    logger.info("RuleDetails: "+ruleIdwithDisplayNameMap);
                 }
                 if (!DOMAIN.equalsIgnoreCase(pair.getKey().toString())
                         && !(INCLUDE_EXEMPT.equalsIgnoreCase(pair.getKey().toString()))) {
@@ -1048,7 +1050,7 @@ public class ComplianceRepositoryImpl implements ComplianceRepository, Constants
 
         String ttypesTemp;
         String ttypes = null;
-        logger.debug("Invoking asset service for fetching target type. AssetGroup : "+assetGroup+" domain: {}"+domain);
+        logger.info("Invoking asset service for fetching target type. AssetGroup : "+assetGroup+" domain: {}"+domain);
         AssetApi assetApi = assetServiceClient.getTargetTypeList(assetGroup, domain);
         AssetApiData data = assetApi.getData();
         AssetCountDTO[] targetTypes = data.getTargettypes();
@@ -1062,7 +1064,7 @@ public class ComplianceRepositoryImpl implements ComplianceRepository, Constants
                 }
             }
         }
-        logger.debug("Returning terget types: "+ttypes);
+        logger.info("Returning terget types: "+ttypes);
         return ttypes;
     }
 

@@ -92,6 +92,7 @@ public class ComplianceController implements Constants {
     public ResponseEntity<Object> getIssues(@RequestBody(required = false) Request request) {
         String assetGroup = request.getAg();
         Map<String, String> filters = request.getFilter();
+        logger.info("Inside compliance controller get issues method");
 
         if (Strings.isNullOrEmpty(assetGroup) || MapUtils.isEmpty(filters)
                 || Strings.isNullOrEmpty(filters.get(DOMAIN))) {
@@ -415,7 +416,7 @@ public class ComplianceController implements Constants {
         String assetGroup = request.getAg();
 
         Map<String, String> filters = request.getFilter();
-        logger.debug("Inside Compliance Controller. Getting non compliance policy. AssetGroup: {}. Request Filters: {} ",assetGroup,filters);
+        logger.info("Inside Compliance Controller. Getting non compliance policy. AssetGroup: {}. Request Filters: {} ",assetGroup,filters);
         if (Strings.isNullOrEmpty(assetGroup) || MapUtils.isEmpty(filters)
                 || Strings.isNullOrEmpty(filters.get(DOMAIN))) {
             return ResponseUtils.buildFailureResponse(new Exception(ASSET_GROUP_DOMAIN));
@@ -448,6 +449,8 @@ public class ComplianceController implements Constants {
     public ResponseEntity<Object> getPolicydetailsbyApplication(@RequestParam("ag") String assetGroup,
             @RequestParam("ruleId") String ruleId,
             @RequestParam(name = "searchText", required = false) String searchText) {
+        logger.info("Inside compliance controller policyDetails by application");
+        logger.info("Params: assetGroup: {} , ruleId: {}, searchText: {}",assetGroup, ruleId,searchText);
         if (Strings.isNullOrEmpty(assetGroup) || Strings.isNullOrEmpty(ruleId)) {
             return ResponseUtils.buildFailureResponse(new Exception("Assetgroup/ruleId is mandatory"));
         }

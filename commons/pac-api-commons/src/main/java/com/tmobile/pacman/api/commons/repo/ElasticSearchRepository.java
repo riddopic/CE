@@ -279,7 +279,7 @@ public class ElasticSearchRepository implements Constants {
 		requestBody.put(_SOURCE, fields);
 		Gson serializer = new GsonBuilder().disableHtmlEscaping().create();
 		String request = serializer.toJson(requestBody);
-
+		LOGGER.debug("Request URL: "+urlToQuery+" request JSON: "+request);
 		return prepareResultsUsingScroll(0, totalDocs, urlToQuery, request);
 	}
 
@@ -979,6 +979,7 @@ public class ElasticSearchRepository implements Constants {
 		requestBody.put(_SOURCE, fields);
 		Gson serializer = new GsonBuilder().create();
 		String request = serializer.toJson(requestBody);
+		LOGGER.debug("Request URL: "+urlToQuery+", request JSON: "+request);
 		return prepareResultsUsingScroll(from, size, urlToQuery, request);
 	}
 
@@ -1107,7 +1108,6 @@ public class ElasticSearchRepository implements Constants {
 			Map<String, Object> aggregations = (Map<String, Object>) response.get(AGGREGATIONS);
 			LOGGER.debug("Aggregation map: "+aggregations);
 			Map<String, Object> name = (Map<String, Object>) aggregations.get(NAME);
-			LOGGER.debug("Name map: "+name);
 			List<Map<String, Object>> buckets = (List<Map<String, Object>>) name.get(BUCKETS);
 			for (int i = 0; i < buckets.size(); i++) {
 				Map<String, Object> bucket = buckets.get(i);

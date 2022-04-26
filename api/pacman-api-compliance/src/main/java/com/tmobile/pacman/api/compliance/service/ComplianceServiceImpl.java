@@ -341,7 +341,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
     @SuppressWarnings("rawtypes")
     public ResponseWithOrder getRulecompliance(Request request) throws ServiceException {
         // Ignoring input as we need to return all.
-    	logger.debug("getRulecompliance invoked with {}",request);
+    	logger.info("getRulecompliance invoked with {}",request);
         int size = 0;
         int from = 0;
         String assetGroup = request.getAg();
@@ -364,7 +364,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
             ttypes = "'"+filters.get(CommonUtils.convertAttributetoKeyword(TARGET_TYPE)).trim()+"'"; 
             resourceTypeFilter = filters.get(CommonUtils.convertAttributetoKeyword(TARGET_TYPE)).trim();
         } else {
-            logger.debug("Fetching target types for assetGroup: {} ",assetGroup);
+            logger.info("Fetching target types for assetGroup: {} ",assetGroup);
             ttypes = repository.getTargetTypeForAG(assetGroup, filters.get(DOMAIN));
         }
         logger.debug("Types in scope for invocation {}",ttypes);
@@ -375,7 +375,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
         }else {
         	application = null;
         }
-        logger.debug("Filters: {}. Application: {}",filters,application);
+        logger.info("Filters: {}. Application: {}",filters,application);
         if (!Strings.isNullOrEmpty(ttypes)) {
             try {
                 List<Map<String, Object>> rules = new ArrayList<>();
@@ -415,7 +415,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
                     Map<String, Long> totalassetCount = new HashMap<>();
                          
                     totalassetCount.putAll(repository.getTotalAssetCount(assetGroup, filters.get(DOMAIN), application,resourceTypeFilter)); // Can't execute in thread as security context is not passed in feign.
-                    logger.debug("Total asset count retrieved from repository :{}",totalassetCount);
+                    logger.info("Total asset count retrieved from repository :{}",totalassetCount);
                     List<Map<String, Object>> ruleIdwithsScanDate  = new ArrayList<>();
                     executor.execute(()->{
                     	try {
@@ -536,7 +536,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
                                     issuecountPerRuleAG = assetCount;
                                 }
                                 Long passed = assetCount - issuecountPerRuleAG;
-                                logger.debug("Passed count calculated from assetCount - issuecountPerRuleAG  {}-{}={} ", assetCount, issuecountPerRuleAG,passed);
+                                logger.info("Passed count calculated from assetCount - issuecountPerRuleAG  {}-{}={} ", assetCount, issuecountPerRuleAG,passed);
                                 compliancePercentage = Math
                                         .floor(((assetCount - issuecountPerRuleAG) * HUNDRED) / assetCount);
                                 if(assetCount==0){
@@ -604,7 +604,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
                 throw new ServiceException(e);
             }
         }
-        logger.debug("Returning response: {}", response);
+        logger.info("Returning response: {}", response);
         return response;
     }
 
@@ -1343,6 +1343,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
                }
            }else {
                assetcountbyAplications = repository.getAllApplicationsAssetCountForTargetType(assetGroup, targetType);
+               logger.info("Retrieved assetApplicationAccounts: {}", assetcountbyAplications);
            }
            // Form Compliance Details by Application
           formComplianceDetailsByApplication(applicationList, assetcountbyAplications,
