@@ -1101,9 +1101,13 @@ public class ElasticSearchRepository implements Constants {
 			String requestJson = gson.toJson(requestBody, Object.class);
 			LOGGER.debug("URL: " + urlToQuery + " Body: " + requestJson);
 			responseDetails = PacHttpUtils.doHttpPost(urlToQuery, requestJson);
+			LOGGER.debug("Response details: "+responseDetails);
 			Map<String, Object> response = (Map<String, Object>) gson.fromJson(responseDetails, Map.class);
+			LOGGER.debug("Response map: "+response);
 			Map<String, Object> aggregations = (Map<String, Object>) response.get(AGGREGATIONS);
+			LOGGER.debug("Aggregation map: "+aggregations);
 			Map<String, Object> name = (Map<String, Object>) aggregations.get(NAME);
+			LOGGER.debug("Name map: "+name);
 			List<Map<String, Object>> buckets = (List<Map<String, Object>>) name.get(BUCKETS);
 			for (int i = 0; i < buckets.size(); i++) {
 				Map<String, Object> bucket = buckets.get(i);
@@ -1114,6 +1118,7 @@ public class ElasticSearchRepository implements Constants {
 			LOGGER.error(ERROR_RETRIEVING_INVENTORY_FROM_ES, e);
 			throw e;
 		}
+		LOGGER.debug("Returning result: "+distribution);
 		return distribution;
 	}
 

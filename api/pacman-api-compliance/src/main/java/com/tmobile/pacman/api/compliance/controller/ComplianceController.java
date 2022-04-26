@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.commons.collections.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +71,8 @@ public class ComplianceController implements Constants {
     /** The compliance service. */
     @Autowired
     private ComplianceService complianceService;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Gets the issues details.Request expects asssetGroup and domain as
@@ -411,7 +415,7 @@ public class ComplianceController implements Constants {
         String assetGroup = request.getAg();
 
         Map<String, String> filters = request.getFilter();
-
+        logger.debug("Inside Compliance Controller. Getting non compliance policy. AssetGroup: {}. Request Filters: {} ",assetGroup,filters);
         if (Strings.isNullOrEmpty(assetGroup) || MapUtils.isEmpty(filters)
                 || Strings.isNullOrEmpty(filters.get(DOMAIN))) {
             return ResponseUtils.buildFailureResponse(new Exception(ASSET_GROUP_DOMAIN));

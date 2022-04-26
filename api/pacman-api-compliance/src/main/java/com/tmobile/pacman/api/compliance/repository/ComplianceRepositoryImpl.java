@@ -999,6 +999,8 @@ public class ComplianceRepositoryImpl implements ComplianceRepository, Constants
     @SuppressWarnings("rawtypes")
     public Map<String, Long> getNonCompliancePolicyByEsWithAssetGroup(String assetGroup, String searchText,
             Map<String, String> filters, int from, int size, String targetTypes) throws DataException {
+        logger.debug("Fetching non compliance policy by ES. Parameters:  assetGroup: "+assetGroup+"," +
+                " searchText: "+searchText+", filters: "+filters+", from: "+filters+", size: "+size+", Target Types: "+targetTypes);
         Map<String, Object> mustFilter = new HashMap<>();
         Map<String, Object> mustNotFilter = new HashMap<>();
         Map<String, Object> mustTermsFilter = new HashMap<>();
@@ -1029,7 +1031,6 @@ public class ComplianceRepositoryImpl implements ComplianceRepository, Constants
             }
         }
         try {
-
             return elasticSearchRepository.getTotalDistributionForIndexAndTypeBySize(assetGroup, null, mustFilter,
                     mustNotFilter, null, ruleIdAggsFilterName, esSize, from, searchText);
         } catch (Exception e) {
@@ -1047,6 +1048,7 @@ public class ComplianceRepositoryImpl implements ComplianceRepository, Constants
 
         String ttypesTemp;
         String ttypes = null;
+        logger.debug("Invoking asset service for fetching target type. AssetGroup : "+assetGroup+" domain: {}"+domain);
         AssetApi assetApi = assetServiceClient.getTargetTypeList(assetGroup, domain);
         AssetApiData data = assetApi.getData();
         AssetCountDTO[] targetTypes = data.getTargettypes();
@@ -1060,6 +1062,7 @@ public class ComplianceRepositoryImpl implements ComplianceRepository, Constants
                 }
             }
         }
+        logger.debug("Returning terget types: "+ttypes);
         return ttypes;
     }
 

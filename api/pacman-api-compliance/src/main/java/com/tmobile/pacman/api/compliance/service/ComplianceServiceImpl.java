@@ -364,6 +364,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
             ttypes = "'"+filters.get(CommonUtils.convertAttributetoKeyword(TARGET_TYPE)).trim()+"'"; 
             resourceTypeFilter = filters.get(CommonUtils.convertAttributetoKeyword(TARGET_TYPE)).trim();
         } else {
+            logger.debug("Fetching target types for assetGroup: {} ",assetGroup);
             ttypes = repository.getTargetTypeForAG(assetGroup, filters.get(DOMAIN));
         }
         logger.debug("Types in scope for invocation {}",ttypes);
@@ -374,7 +375,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
         }else {
         	application = null;
         }
-                            
+        logger.debug("Filters: {}. Application: {}",filters,application);
         if (!Strings.isNullOrEmpty(ttypes)) {
             try {
                 List<Map<String, Object>> rules = new ArrayList<>();
@@ -414,7 +415,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
                     Map<String, Long> totalassetCount = new HashMap<>();
                          
                     totalassetCount.putAll(repository.getTotalAssetCount(assetGroup, filters.get(DOMAIN), application,resourceTypeFilter)); // Can't execute in thread as security context is not passed in feign.
-					 
+                    logger.debug("Total asset count retrieved from repository :{}",totalassetCount);
                     List<Map<String, Object>> ruleIdwithsScanDate  = new ArrayList<>();
                     executor.execute(()->{
                     	try {
@@ -458,6 +459,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
                     	try {
 							openIssuesByRuleByAG.putAll(repository.getNonCompliancePolicyByEsWithAssetGroup(
 							         assetGroup, null, filters, from, size, ttypesTemp));
+                            logger.debug("Open issue by rule count: {}", openIssuesByRuleByAG);
 						} catch (DataException e) {
 							logger.error("Error fetching rule issue aggregations ",e);
 
@@ -495,7 +497,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
                                 if (null != openIssuesByRuleByAG.get(ruleId)) {
                                     issuecountPerRuleAG = (null != openIssuesByRuleByAG.get(ruleId)) ? openIssuesByRuleByAG
                                             .get(ruleId) : 0l;
-                                
+                                    logger.debug("Open issue count set from openIssuesByRuleByAG. Value: {}",issuecountPerRuleAG);
                                 }
                                 if (ruleId.contains(CLOUD_KERNEL_COMPLIANCE_POLICY)|| ruleId.equalsIgnoreCase(ONPREM_KERNEL_COMPLIANCE_RULE)) {
                                   
@@ -534,6 +536,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
                                     issuecountPerRuleAG = assetCount;
                                 }
                                 Long passed = assetCount - issuecountPerRuleAG;
+                                logger.debug("Passed count calculated from assetCount - issuecountPerRuleAG  {}-{}={} ", assetCount, issuecountPerRuleAG,passed);
                                 compliancePercentage = Math
                                         .floor(((assetCount - issuecountPerRuleAG) * HUNDRED) / assetCount);
                                 if(assetCount==0){
@@ -601,6 +604,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
                 throw new ServiceException(e);
             }
         }
+        logger.debug("Returning response: {}", response);
         return response;
     }
 
