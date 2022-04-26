@@ -346,6 +346,7 @@ public class ComplianceRepositoryImpl implements ComplianceRepository, Constants
                     issueDetails = elasticSearchRepository.getSortedDataFromESBySize(assetGroup, null, mustFilter,
                             mustNotFilter, shouldFilter, fields, from, size, searchText, mustTermsFilter, null);
                     for (Map<String, Object> issueDetail : issueDetails) {
+                        logger.info("Source map: "+issueDetail);
                         issueList = getIssueList(null, issueDetail, ruleIdwithDisplayNameMap, issueList, domain);
                     }
 
@@ -1001,7 +1002,7 @@ public class ComplianceRepositoryImpl implements ComplianceRepository, Constants
     @SuppressWarnings("rawtypes")
     public Map<String, Long> getNonCompliancePolicyByEsWithAssetGroup(String assetGroup, String searchText,
             Map<String, String> filters, int from, int size, String targetTypes) throws DataException {
-        logger.debug("Fetching non compliance policy by ES. Parameters:  assetGroup: "+assetGroup+"," +
+        logger.info("Fetching non compliance policy by ES. Parameters:  assetGroup: "+assetGroup+"," +
                 " searchText: "+searchText+", filters: "+filters+", from: "+filters+", size: "+size+", Target Types: "+targetTypes);
         Map<String, Object> mustFilter = new HashMap<>();
         Map<String, Object> mustNotFilter = new HashMap<>();

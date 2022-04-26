@@ -459,7 +459,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
                     	try {
 							openIssuesByRuleByAG.putAll(repository.getNonCompliancePolicyByEsWithAssetGroup(
 							         assetGroup, null, filters, from, size, ttypesTemp));
-                            logger.debug("Open issue by rule count: {}", openIssuesByRuleByAG);
+                            logger.info("Open issue by rule count: {}", openIssuesByRuleByAG);
 						} catch (DataException e) {
 							logger.error("Error fetching rule issue aggregations ",e);
 
@@ -497,7 +497,7 @@ public class ComplianceServiceImpl implements ComplianceService, Constants {
                                 if (null != openIssuesByRuleByAG.get(ruleId)) {
                                     issuecountPerRuleAG = (null != openIssuesByRuleByAG.get(ruleId)) ? openIssuesByRuleByAG
                                             .get(ruleId) : 0l;
-                                    logger.debug("Open issue count set from openIssuesByRuleByAG. Value: {}",issuecountPerRuleAG);
+                                    logger.info("Open issue count set from openIssuesByRuleByAG. Value: {}",issuecountPerRuleAG);
                                 }
                                 if (ruleId.contains(CLOUD_KERNEL_COMPLIANCE_POLICY)|| ruleId.equalsIgnoreCase(ONPREM_KERNEL_COMPLIANCE_RULE)) {
                                   
