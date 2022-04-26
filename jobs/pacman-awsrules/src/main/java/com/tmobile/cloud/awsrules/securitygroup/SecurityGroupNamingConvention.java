@@ -76,8 +76,6 @@ public class SecurityGroupNamingConvention extends BaseRule {
             annotation.put(PacmanSdkConstants.DESCRIPTION, "Security group name is not as per convention.");
             annotation.put(PacmanRuleConstants.SEVERITY, severity);
             annotation.put(PacmanRuleConstants.CATEGORY, category);
-            annotation.put("_resourceid",resourceId);
-            annotation.put("ruleId",resourceId);
 
             logger.debug("Before ValidateSecurityGroup Method.");
 
